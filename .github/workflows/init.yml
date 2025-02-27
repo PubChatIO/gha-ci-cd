@@ -1,0 +1,23 @@
+name: Initialize Infrastructure
+on: workflow_dispatch
+env:
+  AWS_REGION: us-east-1
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  aws-auth:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::605134440620:role/GitHubActions-AssumeRoleWithAction
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+  init:
+    runs-on: ubuntu-24.04
+    needs: aws-auth
+    steps:
+      - name: Create Bucket
+        run: echo
