@@ -10,9 +10,9 @@ permissions:
 jobs:
   terraform:
     runs-on: ubuntu-24.04
-    # defaults:
-    #   run:
-    #     working-directory: terraform
+    defaults:
+      run:
+        working-directory: terraform
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -24,8 +24,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.11.0
-      - name: ls
-        run : ls
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: lib/node_modules
+          key: node-modules-${{ hashFiles('lib/bun.lock') }}
       - name: Format
         run: terraform fmt -check
       - name: Validate
