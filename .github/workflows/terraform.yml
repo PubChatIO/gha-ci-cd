@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-24.04
     defaults:
       run:
-        shell: bash
         working-directory: ./terraform
     steps:
       - name: Configure AWS Credentials
