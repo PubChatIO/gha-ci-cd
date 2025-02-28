@@ -22,8 +22,8 @@ jobs:
     steps:
       - name: Create Bucket
         run: |
-          aws s3api create-bucket
-            –bucket pcio-terraform
-            –region ${{ env.AWS_REGION }}
+          aws s3api create-bucket         \
+            –bucket pcio-terraform        \
+            –region ${{ env.AWS_REGION }} \
             –create-bucket-configuration LocationConstraint=${{ env.AWS_REGION }}
 
