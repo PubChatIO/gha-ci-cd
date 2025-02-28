@@ -33,10 +33,10 @@ jobs:
           key: node-modules-${{ hashFiles('lib/bun.lock') }}
       - name: Format
         run: terraform fmt -check
-      - name: Validate
-        run: terraform validate
       - name: Initialize
         run: terraform init
+      - name: Validate
+        run: terraform validate
       - name: Plan
         run: terraform plan
       - name: Apply
