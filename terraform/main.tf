@@ -1,4 +1,3 @@
-resource "aws_s3_bucket" "spacelift-test1-s3" {
+resource "aws_s3_bucket" "test" {
    bucket = "pcio-test"
-   acl = "private"
 }
