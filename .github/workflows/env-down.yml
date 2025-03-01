@@ -8,7 +8,9 @@ permissions:
 jobs:
   init:
     runs-on: ubuntu-24.04
+
     environment: ${{ github.ref_name }}
+
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -16,13 +18,24 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ vars.TF_VERSION }}
+
+      - name: Initialize Terraform
+        run: |
+          terraform init \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="bucket=${{ env.BUCKET_TF }}"  \
+            -backend-config="key=state/terraform.tfstate"
+
       - name: Terraform Destroy
         run: terraform destroy
+
       - name: Empty Bucket
         run: aws s3 rm s3://${{ env.BUCKET_TF }} --recursive
+
       - name: 'Delete Bucket'
         run: 'aws s3 rb s3://${{ env.BUCKET_TF }}'
