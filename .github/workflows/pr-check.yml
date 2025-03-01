@@ -19,10 +19,6 @@ jobs:
     env:
       FILE_PLAN: ${{ github.event.number }}.plan
 
-    defaults:
-      run:
-        working-directory: terraform
-
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -94,7 +90,7 @@ jobs:
         run: |
           wait-on http://localhost:${{ env.API_PORT }}
           wait-on http://localhost:${{ env.UI_PORT }}
-          bunx run test:ci
+          bunx run e2e:ci
 
       - name: Spin Down Services
         run: |
