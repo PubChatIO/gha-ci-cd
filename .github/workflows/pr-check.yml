@@ -84,10 +84,11 @@ jobs:
       - name: Lint (UI)
         run: cd ui && docker compose exec ui bun run lint && cd ..
 
-      - name: Run Code Tests
-        run: |
-          docker compose exec api bun test
-          docker compose exec ui bun test
+      - name: Run Code Tests (API)
+        run: docker compose exec api bun test
+
+      - name: Run Code Tests (UI)
+        run: docker compose exec ui bun test
 
       - name: Spin Up Services
         run: |
