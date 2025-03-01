@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     use_lockfile = true
     region       = "us-east-1"
-    bucket       = "pcio-terraform"
+    bucket       = "pcio-${vars.env}-${vars.aws_account_id}-terraform"
     key          = "terraform.tfstate"
   }
 }

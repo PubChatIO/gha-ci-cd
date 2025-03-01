@@ -1,5 +1,7 @@
 name: Terraform
 on: workflow_dispatch
+env:
+  BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 permissions:
   id-token: write
   contents: read
@@ -30,7 +32,10 @@ jobs:
           path: lib/node_modules
           key: node-modules-${{ hashFiles('lib/bun.lock') }}
       - name: Initialize
-        run: terraform init
+        run: |
+          terraform init \
+            -var env="${{ github.ref_name }}"
+            -var aws_account_id="${{ vars.AWS_ACCOUNT_ID }}"
       - name: Format
         run: terraform fmt -check
       - name: Validate
