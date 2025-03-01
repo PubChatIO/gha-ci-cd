@@ -34,7 +34,7 @@ jobs:
       - name: Initialize
         run: |
           terraform init \
-            -lock=true
+            -lock=true                                      \
             -backend-config="key=terraform.tfstate"         \
             -backend-config="bucket=${{ vars.BUCKET_TF }}"  \
             -backend-config="region=${{ vars.AWS_REGION }}"
