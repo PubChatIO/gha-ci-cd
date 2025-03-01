@@ -56,7 +56,9 @@ jobs:
         run: bun install
 
       - name: Start Docker Containers
-        run: docker compose up -d
+        run: |
+          touch .env
+          docker compose up -d
 
       - name: Cache Dependencies (global)
         uses: actions/cache@v3
