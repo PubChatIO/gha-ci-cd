@@ -1,14 +1,20 @@
 name: Environment - Up
+
 on: workflow_dispatch
+
 env:
   BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
+
 permissions:
   id-token: write
   contents: read
+
 jobs:
-  init:
+  up:
     runs-on: ubuntu-24.04
+
     environment: ${{ github.ref_name }}
+
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -16,5 +22,6 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
+
       - name: Create Bucket
         run: aws s3 mb s3://${{ env.BUCKET_TF }}

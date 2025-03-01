@@ -1,10 +1,14 @@
 name: Terraform
+
 on: workflow_dispatch
+
 env:
   BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
+
 permissions:
   id-token: write
   contents: read
+
 jobs:
   terraform:
     runs-on: ubuntu-24.04
