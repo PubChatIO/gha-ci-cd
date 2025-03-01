@@ -93,7 +93,7 @@ jobs:
         run: |
           npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
           # npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
-          bunx run e2e:ci
+          bun run e2e:ci
 
       - name: Spin Down Services
         run: |
