@@ -57,7 +57,7 @@ jobs:
 
       - name: Start Docker Containers
         run: |
-          touch .env
+          touch .env # create empty .env file for docker-compose.yml
           docker compose up -d
 
       - name: Cache Dependencies (global)
@@ -79,10 +79,10 @@ jobs:
           key: node-modules-${{ hashFiles('ui/bun.lock') }}
 
       - name: Lint (API)
-        run: cd api && bun run lint && cd ..
+        run: cd api && docker compose exec api bun run lint && cd ..
 
       - name: Lint (UI)
-        run: cd ui && bun run lint && cd ..
+        run: cd ui && docker compose exec ui bun run lint && cd ..
 
       - name: Run Code Tests
         run: |
