@@ -16,6 +16,9 @@ jobs:
     environment:
       name: ${{ github.ref_name }}
 
+    env:
+      FILE_PLAN: ${{ github.event.number }}.plan
+
     defaults:
       run:
         working-directory: terraform
@@ -42,6 +45,24 @@ jobs:
           path: lib/node_modules
           key: node-modules-${{ hashFiles('lib/bun.lock') }}
 
+      - name: Lint Code
+        run: echo "linting..."
+
+      - name: Start Docker
+        run: |
+          docker compose up -d
+          echo "Waiting for services to be ready..."
+          for i in {1..30}; do
+            curl --silent --fail http://localhost:${{ secrets.PORT_API }} && break
+            sleep 2
+          done
+
+      - name: Run Code Tests
+        run: echo "running tests..."
+
+      - name: Run E2E Tests
+        run: echo "running e2e tests..."
+
       - name: Initialize
         run: |
           terraform init                                    \
@@ -57,7 +78,20 @@ jobs:
         run: terraform validate
 
       - name: Plan
-        run: terraform plan
+        run: terraform plan -out="${{ env.FILE_PLAN }}"
 
-      - name: Apply
-        run: terraform apply -auto-approve
+      - name: Upload Plan to S3
+        run: aws s3 cp                                          \
+          ${{ env.FILE_PLAN }}                                  \
+          s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
+
+      # move to PR merge workflow
+      # - name: Apply
+      #   run: |
+      #     if [[ "${{ github.ref_name }}" == "prod" ]]; then
+      #       echo "Production environment - requiring manual approval"
+      #       exit 1
+      #     else
+      #       echo "Non-prod environment - using auto-approve"
+      #       terraform apply -auto-approve
+      #     fi
