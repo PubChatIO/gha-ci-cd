@@ -48,9 +48,6 @@ jobs:
       - name: Install Global Dependencies
         run: bun install
 
-      - name: Install Global Dependencies
-        run: bun install
-
       - name: Start Docker Containers
         run: |
           echo "API_PORT=${{ secrets.API_PORT }}" >> .env
