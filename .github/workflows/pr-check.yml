@@ -53,10 +53,9 @@ jobs:
 
       - name: Start Docker Containers
         run: |
-          touch .env # create empty .env file for docker-compose.yml
-          API_PORT=${{ secrets.API_PORT }}  \
-          UI_PORT=${{ secrets.UI_PORT }}    \
-            docker compose up -d
+          echo "API_PORT=${{ secrets.API_PORT }}" >> .env
+          echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
+          docker compose up -d
 
       - name: Cache Dependencies (global)
         uses: actions/cache@v3
