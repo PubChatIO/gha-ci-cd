@@ -1,4 +1,4 @@
-name: Environment - Up
+name: Environment - Down
 on: workflow_dispatch
 env:
   BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
