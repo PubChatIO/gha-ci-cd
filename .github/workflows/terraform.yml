@@ -48,7 +48,7 @@ jobs:
       - name: Lint Code
         run: echo "linting..."
 
-      - name: Start Docker
+      - name: Start Docker Containers
         run: |
           docker compose up -d
           echo "Waiting for services to be ready..."
