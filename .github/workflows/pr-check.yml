@@ -48,7 +48,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Global Dependencies
-        run: bun install
+        run: |
+          bun add eslint --global
+          bun install
 
       - name: Lint (API)
         run: cd api && bun run lint && cd ..
