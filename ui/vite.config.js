@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    /* eslint-disable-next-line */
-    port: process.env.UI_PORT,
+    port: import.meta.env.UI_PORT,
   },
 })
