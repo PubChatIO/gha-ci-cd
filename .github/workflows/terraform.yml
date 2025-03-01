@@ -44,9 +44,9 @@ jobs:
 
       - name: Initialize
         run: |
-          terraform init \
+          terraform init                                    \
             -backend-config="region=${{ vars.AWS_REGION }}" \
-            -backend-config="bucket=${{ env.BUCKET_TF }}"  \
+            -backend-config="bucket=${{ env.BUCKET_TF }}"   \
             -backend-config="key=state/terraform.tfstate"   \
             -var env="${{ github.ref_name }}"
 
