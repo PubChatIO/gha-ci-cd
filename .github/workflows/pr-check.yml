@@ -17,10 +17,6 @@ jobs:
     environment:
       name: ${{ github.ref_name }}
 
-    env:
-      API_PORT: ${{ secrets.API_PORT }}
-      UI_PORT: ${{ secrets.UI_PORT }}
-
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -58,7 +54,9 @@ jobs:
       - name: Start Docker Containers
         run: |
           touch .env # create empty .env file for docker-compose.yml
-          docker compose up -d
+          API_PORT=${{ secrets.API_PORT }}  \
+          UI_PORT=${{ secrets.UI_PORT }}    \
+            docker compose up -d
 
       - name: Cache Dependencies (global)
         uses: actions/cache@v3
@@ -97,8 +95,8 @@ jobs:
 
       - name: Run E2E Tests
         run: |
-          wait-on http://localhost:${{ env.API_PORT }}
-          wait-on http://localhost:${{ env.UI_PORT }}
+          wait-on http://localhost:${{ secrets.API_PORT }}
+          wait-on http://localhost:${{ secrets.UI_PORT }}
           bunx run e2e:ci
 
       - name: Spin Down Services
