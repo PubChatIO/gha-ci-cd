@@ -12,7 +12,13 @@ jobs:
         working-directory: terraform
     steps:
       - name: Ref Name
-        run: echo "${{ github.ref_name}}"
+        run: echo "Env - ${{ github.ref_name }}"
+      - name: AWS_REGION
+        run: echo "AWS_REGION - ${{ env.AWS_REGION }}"
+      - name: TF_LOG
+        run: echo "TF_LOG - ${{ env.TF_LOG }}"
+      - name: TF_VAR_REGION
+        run: echo "TF_VAR_REGION - ${{ env.TF_VAR_REGION }}"
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1.7.0
       #   with:
