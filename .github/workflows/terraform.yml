@@ -6,7 +6,8 @@ permissions:
 jobs:
   terraform:
     runs-on: ubuntu-24.04
-    environment: ${{ github.ref_name }}
+    environment:
+      name: ${{ github.ref_name }}
     # defaults:
     #   run:
     #     working-directory: terraform
