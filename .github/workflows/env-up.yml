@@ -15,6 +15,6 @@ jobs:
         with:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
       - name: Create Bucket
         run: aws s3 mb s3://${{ env.BUCKET_TF }}

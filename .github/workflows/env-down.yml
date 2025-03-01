@@ -15,7 +15,7 @@ jobs:
         with:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
