@@ -22,3 +22,7 @@ jobs:
           terraform_version: ${{ vars.TF_VERSION }}
       - name: Terraform Destroy
         run: terraform destroy
+      - name: Empty Bucket
+        run: aws s3 rm s3://${{ env.BUCKET_TF }} --recursive
+      - name: 'Delete Bucket'
+        run: 'aws s3 rb s3://${{ env.BUCKET_TF }}'
