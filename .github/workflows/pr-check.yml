@@ -3,6 +3,7 @@ name: PR - Check
 on: workflow_dispatch
 
 env:
+  FILE_PLAN: ${{ github.event.number }}.plan
   BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
 permissions:
@@ -17,7 +18,8 @@ jobs:
       name: ${{ github.ref_name }}
 
     env:
-      FILE_PLAN: ${{ github.event.number }}.plan
+      API_PORT: ${{ secrets.API_PORT }}
+      UI_PORT: ${{ secrets.UI_PORT }}
 
     steps:
       - name: Configure AWS Credentials
@@ -92,8 +94,8 @@ jobs:
 
       - name: Run E2E Tests
         run: |
-          wait-on http://localhost:${{ secrets.API_PORT }}
-          wait-on http://localhost:${{ secrets.UI_PORT }}
+          wait-on http://localhost:${{ env.API_PORT }}
+          wait-on http://localhost:${{ env.UI_PORT }}
           bunx run e2e:ci
 
       - name: Spin Down Services
