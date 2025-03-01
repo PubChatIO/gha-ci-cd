@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  checks:
     runs-on: ubuntu-24.04
 
     environment:
@@ -122,14 +122,3 @@ jobs:
         run: aws s3 cp                                          \
           ${{ env.FILE_PLAN }}                                  \
           s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
-
-      # move to PR merge workflow
-      # - name: Apply
-      #   run: |
-      #     if [[ "${{ github.ref_name }}" == "prod" ]]; then
-      #       echo "Production environment - requiring manual approval"
-      #       exit 1
-      #     else
-      #       echo "Non-prod environment - using auto-approve"
-      #       terraform apply -auto-approve
-      #     fi
