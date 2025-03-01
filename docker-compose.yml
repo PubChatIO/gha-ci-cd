@@ -1,0 +1,30 @@
+services:
+  api:
+    env_file: .env
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./api:/app
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    healthcheck:
+      retries: 10
+      start_period: 3s
+      interval: 1s
+      timeout: 1s
+      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}"]
+  ui:
+    env_file: .env
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${UI_PORT}:${UI_PORT}"
+    healthcheck:
+      retries: 10
+      start_period: 3s
+      interval: 1s
+      timeout: 1s
+      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}"]

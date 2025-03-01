@@ -1,0 +1,13 @@
+{
+  "name": "api",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch run ./src/index.js",
+    "start": "bun run ./src/index.js",
+    "lint": "echo \"linting...\""
+  },
+  "dependencies": {
+    "sleepy-serv": "^0.1.3"
+  }
+}

@@ -1,0 +1,9 @@
+FROM oven/bun:1.2.4-debian
+WORKDIR /app
+
+COPY ./package.json ./
+RUN bun install
+
+COPY ./ ./
+
+CMD ["sleep", "infinity"]

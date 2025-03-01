@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "e2e": "bunx cypress open --e2e --browser chrome",
+    "e2e:ci": "bunx cypress run --e2e --browser chrome"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cypress": "^14.1.0",
+    "wait-on": "^8.0.2"
+  }
+}

@@ -1,4 +1,4 @@
-name: Terraform
+name: PR - Check
 
 on: workflow_dispatch
 
@@ -36,32 +36,70 @@ jobs:
         with:
           terraform_version: ${{ vars.TF_VERSION }}
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ vars.BUN_VERSION }}
+
+      - name: Install Cypress Dependencies
+        run: |
+          apt-get install                                                   \
+            libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 \
+            libasound2 libxtst6 xauth xvfb
+
+      - name: Install Global Dependencies
+        run: bun install
+
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        with:
-          path: lib/node_modules
-          key: node-modules-${{ hashFiles('lib/bun.lock') }}
 
       - name: Lint Code
         run: echo "linting..."
 
+      - name: Install Global Dependencies
+        run: bun install
+
       - name: Start Docker Containers
-        run: |
-          docker compose up -d
-          echo "Waiting for services to be ready..."
-          for i in {1..30}; do
-            curl --silent --fail http://localhost:${{ secrets.PORT_API }} && break
-            sleep 2
-          done
+        run: docker compose up -d
+
+      - name: Cache Dependencies (global)
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('bun.lock') }}
+
+      - name: Cache Dependencies (API)
+        uses: actions/cache@v3
+        with:
+          path: api/node_modules
+          key: node-modules-${{ hashFiles('api/bun.lock') }}
+
+      - name: Cache Dependencies (UI)
+        uses: actions/cache@v3
+        with:
+          path: ui/node_modules
+          key: node-modules-${{ hashFiles('ui/bun.lock') }}
 
       - name: Run Code Tests
-        run: echo "running tests..."
+        run: |
+          docker compose exec api bun test
+          docker compose exec ui bun test
+
+      - name: Spin Up Services
+        run: |
+          nohup docker compose exec api bun dev && echo $! > api.pid
+          nohup docker compose exec ui bun dev && echo $! > ui.pid
 
       - name: Run E2E Tests
-        run: echo "running e2e tests..."
+        run: |
+          wait-on http://localhost:${{ env.API_PORT }}
+          wait-on http://localhost:${{ env.UI_PORT }}
+          bunx run test:ci
+
+      - name: Spin Down Services
+        run: |
+          kill $(cat api.pid)
+          kill $(cat ui.pid)
 
       - name: Initialize
         run: |
