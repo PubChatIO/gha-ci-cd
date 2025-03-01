@@ -9,12 +9,6 @@ services:
       - ./api:/app
     ports:
       - "${API_PORT}:${API_PORT}"
-    healthcheck:
-      retries: 10
-      start_period: 3s
-      interval: 1s
-      timeout: 1s
-      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}"]
   ui:
     env_file: .env
     build:
@@ -22,9 +16,3 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "${UI_PORT}:${UI_PORT}"
-    healthcheck:
-      retries: 10
-      start_period: 3s
-      interval: 1s
-      timeout: 1s
-      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}"]

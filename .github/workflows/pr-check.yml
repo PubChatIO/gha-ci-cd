@@ -91,8 +91,8 @@ jobs:
 
       - name: Run E2E Tests
         run: |
-          npx wait-on http://localhost:${{ secrets.API_PORT }}
-          npx wait-on http://localhost:${{ secrets.UI_PORT }}
+          npx wait-on http-get://localhost:${{ secrets.API_PORT }}
+          npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
           bunx run e2e:ci
 
       - name: Spin Down Services
