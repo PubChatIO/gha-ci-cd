@@ -16,6 +16,10 @@ jobs:
     environment:
       name: ${{ github.ref_name }}
 
+    defaults:
+      run:
+        working-directory: terraform
+
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -23,6 +27,9 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -36,11 +43,11 @@ jobs:
             -backend-config="bucket=${{ env.BUCKET_TF }}"   \
             -backend-config="key=state/terraform.tfstate"
 
-      # - name: Terraform Destroy
-      #   run: terraform destroy
+      - name: Terraform Destroy
+        run: terraform destroy
 
-      # - name: Empty Bucket
-      #   run: aws s3 rm s3://${{ env.BUCKET_TF }} --recursive
+      - name: Empty Bucket
+        run: aws s3 rm s3://${{ env.BUCKET_TF }} --recursive
 
-      # - name: 'Delete Bucket'
-      #   run: 'aws s3 rb s3://${{ env.BUCKET_TF }}'
+      - name: 'Delete Bucket'
+        run: 'aws s3 rb s3://${{ env.BUCKET_TF }}'
