@@ -108,7 +108,7 @@ jobs:
 
 
       - name: Wait for Service (API)
-        run: npx wait-on http-get://localhost:${{ vars.API_PORT }}/api
+        run: npx wait-on http-get://api:${{ vars.API_PORT }}/api
 
       - name: Wait for Service (UI)
         run: npx wait-on http-get://localhost:${{ vars.UI_PORT }}
