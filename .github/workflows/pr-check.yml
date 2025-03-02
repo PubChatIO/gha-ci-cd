@@ -90,7 +90,7 @@ jobs:
           nohup docker compose exec ui bun dev & echo $! > ui.pid
 
       - name: Wait for Service (API)
-        run: npx wait-on http-get://localhost:${{ vars.API_PORT }}/api
+        run: npx wait-on http-get://localhost:${{ vars.API_PORT }}
 
       - name: Wait for Service (UI)
         run: npx wait-on http-get://localhost:${{ vars.UI_PORT }}
