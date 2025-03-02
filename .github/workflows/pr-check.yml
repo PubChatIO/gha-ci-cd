@@ -89,11 +89,14 @@ jobs:
           nohup docker compose exec api bun dev & echo $! > api.pid
           nohup docker compose exec ui bun dev & echo $! > ui.pid
 
+      - name: Wait for Service (API)
+        run: npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
+
+      - name: Wait for Service (UI)
+        run: npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
+
       - name: Run E2E Tests
-        run: |
-          npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
-          npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
-          bun run e2e:ci
+        run: bun run e2e:ci
 
       - name: Spin Down Services
         run: |
