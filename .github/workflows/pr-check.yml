@@ -48,7 +48,7 @@ jobs:
       - name: Install Global Dependencies
         run: bun install
 
-      - name: Start Docker Containers
+      - name: Start Docker Compose
         run: |
           echo "API_PORT=${{ vars.API_PORT }}" >> .env
           echo "UI_PORT=${{ vars.UI_PORT }}" >> .env
