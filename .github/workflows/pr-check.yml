@@ -89,32 +89,8 @@ jobs:
           nohup docker compose exec api bun dev & echo $! > api.pid
           nohup docker compose exec ui bun dev & echo $! > ui.pid
 
-
-
-
-      - name: Debug - Wait a bit just in case
-        run: sleep 5
-
-      - name: Debug - Check Running Containers
-        run: docker ps
-
-      - name: Debug - Check Logs
-        run: docker compose logs
-
-      - name: Debug - Check if API responds manually
-        run: curl -v http://0.0.0.0:8080/api || true
-
-      - name: Debug - Check if API responds manually
-        run: curl -v http://localhost:8080/api || true
-
-      - name: Debug - Check if API responds manually
-        run: curl -v http://api:8080/api || true
-
-
-
-
       - name: Wait for Service (API)
-        run: npx wait-on http-get://api:${{ vars.API_PORT }}/api
+        run: npx wait-on http-get://localhost:${{ vars.API_PORT }}/api
 
       - name: Wait for Service (UI)
         run: npx wait-on http-get://localhost:${{ vars.UI_PORT }}
