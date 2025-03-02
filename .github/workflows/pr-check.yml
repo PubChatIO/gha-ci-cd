@@ -50,8 +50,8 @@ jobs:
 
       - name: Start Docker Containers
         run: |
-          echo "API_PORT=${{ secrets.API_PORT }}" >> .env
-          echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
+          echo "API_PORT=${{ vars.API_PORT }}" >> .env
+          echo "UI_PORT=${{ vars.UI_PORT }}" >> .env
           docker compose up -d
 
       - name: Cache Dependencies (global)
@@ -90,10 +90,10 @@ jobs:
           nohup docker compose exec ui bun dev & echo $! > ui.pid
 
       - name: Wait for Service (API)
-        run: npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
+        run: npx wait-on http-get://localhost:${{ vars.API_PORT }}/api
 
       - name: Wait for Service (UI)
-        run: npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
+        run: npx wait-on http-get://localhost:${{ vars.UI_PORT }}
 
       - name: Run E2E Tests
         run: bun run e2e:ci
