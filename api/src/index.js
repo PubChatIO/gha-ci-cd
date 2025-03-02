@@ -1,7 +1,15 @@
-import { createApp } from 'sleepy-serv'
+/* eslint-disable */
 
-const app = await createApp(process.env.API_PORT, import.meta.dirname, {
-  mountPath: '/api',
+Bun.serve({
+  host: '0.0.0.0',
+  port: process.env.API_PORT,
+  routes: {
+    '/api': _req => {
+      console.log('endpoint hit...')
+
+      return new Response('Hello world')
+    },
+  },
 })
 
-console.log('routes:', app.routes)
+console.info('Running on port:', process.env.API_PORT)
