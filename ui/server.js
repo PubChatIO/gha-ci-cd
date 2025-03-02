@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import App from './index.html'
 
 Bun.serve({
