@@ -57,7 +57,7 @@ jobs:
       - name: Build Docker Image (API)
         run: |
           docker build                                \
-            -t ${{ env.ECR_URL }}/pubchatio/api                          \
+            -t ${{ env.ECR_URL }}/api                 \
             --build-arg API_PORT=${{ vars.API_PORT }} \
             .
         working-directory: api
@@ -65,15 +65,15 @@ jobs:
       - name: Build Docker Image (UI)
         run: |
           docker build                                \
-            -t ${{ env.ECR_URL }}/pubchatio/ui                           \
+            -t ${{ env.ECR_URL }}/ui                  \
             --build-arg API_PORT=${{ vars.UI_PORT }}  \
             .
         working-directory: ui
 
       - name: Push Docker Image (API)
-        run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest
+        run: docker push ${{ env.ECR_URL }}/api:latest
         working-directory: api
 
       - name: Push Docker Image (UI)
-        run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest
+        run: docker push ${{ env.ECR_URL }}/api:latest
         working-directory: ui
