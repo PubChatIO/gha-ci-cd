@@ -9,6 +9,9 @@ jobs:
   upload:
       runs-on: ubuntu-24.04
 
+      environment:
+        name: dev
+
       steps:
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v1.7.0
