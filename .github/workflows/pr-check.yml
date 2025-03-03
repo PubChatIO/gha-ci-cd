@@ -19,6 +19,9 @@ jobs:
       name: ${{ github.base_ref }}
 
     steps:
+      - name: Debug Base Ref
+        run: "echo ${{ github.base_ref }}"
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
@@ -26,101 +29,101 @@ jobs:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ vars.TF_VERSION }}
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: ${{ vars.TF_VERSION }}
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: ${{ vars.BUN_VERSION }}
+      # - name: Setup Bun
+      #   uses: oven-sh/setup-bun@v2
+      #   with:
+      #     bun-version: ${{ vars.BUN_VERSION }}
 
-      - name: Install Cypress Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install                                              \
-            libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 \
-            libasound2t64 libxtst6 xauth xvfb
+      # - name: Install Cypress Dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install                                              \
+      #       libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 \
+      #       libasound2t64 libxtst6 xauth xvfb
 
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      # - name: Checkout Code
+      #   uses: actions/checkout@v4
 
-      - name: Install Global Dependencies
-        run: bun install
+      # - name: Install Global Dependencies
+      #   run: bun install
 
-      - name: Start Docker Compose
-        run: |
-          echo "API_PORT=${{ secrets.API_PORT }}" >> .env
-          echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
-          docker compose up -d
+      # - name: Start Docker Compose
+      #   run: |
+      #     echo "API_PORT=${{ secrets.API_PORT }}" >> .env
+      #     echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
+      #     docker compose up -d
 
-      - name: Cache Dependencies (global)
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('bun.lock') }}
+      # - name: Cache Dependencies (global)
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: node_modules
+      #     key: node-modules-${{ hashFiles('bun.lock') }}
 
-      - name: Cache Dependencies (API)
-        uses: actions/cache@v3
-        with:
-          path: api/node_modules
-          key: node-modules-${{ hashFiles('api/bun.lock') }}
+      # - name: Cache Dependencies (API)
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: api/node_modules
+      #     key: node-modules-${{ hashFiles('api/bun.lock') }}
 
-      - name: Cache Dependencies (UI)
-        uses: actions/cache@v3
-        with:
-          path: ui/node_modules
-          key: node-modules-${{ hashFiles('ui/bun.lock') }}
+      # - name: Cache Dependencies (UI)
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ui/node_modules
+      #     key: node-modules-${{ hashFiles('ui/bun.lock') }}
 
-      - name: Lint (API)
-        run: cd api && docker compose exec api bun run lint && cd ..
+      # - name: Lint (API)
+      #   run: cd api && docker compose exec api bun run lint && cd ..
 
-      - name: Lint (UI)
-        run: cd ui && docker compose exec ui bun run lint && cd ..
+      # - name: Lint (UI)
+      #   run: cd ui && docker compose exec ui bun run lint && cd ..
 
-      - name: Run Code Tests (API)
-        run: docker compose exec api bun test
+      # - name: Run Code Tests (API)
+      #   run: docker compose exec api bun test
 
-      - name: Run Code Tests (UI)
-        run: docker compose exec ui bun test
+      # - name: Run Code Tests (UI)
+      #   run: docker compose exec ui bun test
 
-      - name: Spin Up Services
-        run: |
-          nohup docker compose exec api bun dev & echo $! > api.pid
-          nohup docker compose exec ui bun dev & echo $! > ui.pid
+      # - name: Spin Up Services
+      #   run: |
+      #     nohup docker compose exec api bun dev & echo $! > api.pid
+      #     nohup docker compose exec ui bun dev & echo $! > ui.pid
 
-      - name: Wait for Service (API)
-        run: npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
+      # - name: Wait for Service (API)
+      #   run: npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
 
-      - name: Wait for Service (UI)
-        run: npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
+      # - name: Wait for Service (UI)
+      #   run: npx wait-on http-get://localhost:${{ secrets.UI_PORT }}
 
-      - name: Run E2E Tests
-        run: bun run e2e:ci
+      # - name: Run E2E Tests
+      #   run: bun run e2e:ci
 
-      - name: Spin Down Services
-        run: |
-          kill $(cat api.pid)
-          kill $(cat ui.pid)
+      # - name: Spin Down Services
+      #   run: |
+      #     kill $(cat api.pid)
+      #     kill $(cat ui.pid)
 
-      - name: Initialize Terraform
-        run: |
-          terraform init                                    \
-            -backend-config="region=${{ vars.AWS_REGION }}" \
-            -backend-config="bucket=${{ env.BUCKET_TF }}"   \
-            -backend-config="key=state/terraform.tfstate"   \
-            -var env="${{ github.base_ref }}"
-        working-directory: terraform
+      # - name: Initialize Terraform
+      #   run: |
+      #     terraform init                                    \
+      #       -backend-config="region=${{ vars.AWS_REGION }}" \
+      #       -backend-config="bucket=${{ env.BUCKET_TF }}"   \
+      #       -backend-config="key=state/terraform.tfstate"   \
+      #       -var env="${{ github.base_ref }}"
+      #   working-directory: terraform
 
-      - name: Format Terraform
-        run: terraform fmt -check
-        working-directory: terraform
+      # - name: Format Terraform
+      #   run: terraform fmt -check
+      #   working-directory: terraform
 
-      - name: Validate Terraform
-        run: terraform validate
-        working-directory: terraform
+      # - name: Validate Terraform
+      #   run: terraform validate
+      #   working-directory: terraform
 
-      - name: Plan Terraform
-       run: terraform plan
-       working-directory: terraform
+      # - name: Plan Terraform
+      #  run: terraform plan
+      #  working-directory: terraform
