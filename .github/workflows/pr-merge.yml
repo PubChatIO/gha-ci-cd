@@ -1,7 +1,11 @@
 name: PR - Merge
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - dev
+      - stg
+      - prod
 
 env:
   ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
@@ -19,11 +23,8 @@ jobs:
       name: ${{ github.base_ref }}
 
     steps:
-      - name: ref_name
-        run: echo "${{ github.ref_name }}"
-
-      - name: base_ref
-        run: echo "${{ github.base_ref }}"
+      - name: asdf
+        run: echo "${{ github.action_ref }}"
 
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1.7.0
