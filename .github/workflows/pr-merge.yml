@@ -29,6 +29,9 @@ jobs:
         with:
           terraform_version: ${{ vars.TF_VERSION }}
 
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Initialize
         run: |
           terraform init                                    \
