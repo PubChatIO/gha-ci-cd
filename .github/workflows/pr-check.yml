@@ -1,7 +1,7 @@
 name: PR - Check
 
 on:
-  push:
+  pull_rqeuest:
 
 env:
   FILE_PLAN: ${{ github.event.number || 'test' }}.plan
