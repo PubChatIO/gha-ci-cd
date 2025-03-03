@@ -33,19 +33,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Initialize Terraform
-        run: |
-          terraform init                                    \
-            -backend-config="region=${{ vars.AWS_REGION }}" \
-            -backend-config="bucket=${{ env.BUCKET_TF }}"   \
-            -backend-config="key=state/terraform.tfstate"   \
-            -var env="${{ github.ref_name }}"
-        working-directory: terraform
-
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
-        working-directory: terraform
-
       - name: Log Into ECR
         run: |
           aws ecr get-login-password        \
@@ -77,3 +64,16 @@ jobs:
       - name: Push Docker Image (UI)
         run: docker push ${{ env.ECR_URL }}/ui:latest
         working-directory: ui
+
+      - name: Initialize Terraform
+        run: |
+          terraform init                                    \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="bucket=${{ env.BUCKET_TF }}"   \
+            -backend-config="key=state/terraform.tfstate"   \
+            -var env="${{ github.ref_name }}"
+        working-directory: terraform
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+        working-directory: terraform
