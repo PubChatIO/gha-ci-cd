@@ -2,11 +2,6 @@ name: PR - Check
 
 on:
   pull_request:
-  push:
-    branches:
-      - dev
-      - stg
-      - prod
 
 env:
   FILE_PLAN: ${{ github.event.number || 'test' }}.plan
