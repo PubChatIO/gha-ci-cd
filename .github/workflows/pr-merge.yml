@@ -5,6 +5,10 @@ on: workflow_dispatch
 env:
   ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   merge:
     runs-on: ubuntu-24.04
