@@ -3,7 +3,7 @@ name: PR - Check
 on: workflow_dispatch
 
 env:
-  FILE_PLAN: ${{ github.event.number }}.plan
+  FILE_PLAN: ${{ github.event.number || 'test' }}.plan
   BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
 permissions:
@@ -110,17 +110,22 @@ jobs:
             -backend-config="bucket=${{ env.BUCKET_TF }}"   \
             -backend-config="key=state/terraform.tfstate"   \
             -var env="${{ github.ref_name }}"
+        working-directory: terraform
 
       - name: Format
         run: terraform fmt -check
+        working-directory: terraform
 
       - name: Validate
         run: terraform validate
+        working-directory: terraform
 
       - name: Plan
         run: terraform plan -out="${{ env.FILE_PLAN }}"
+        working-directory: terraform
 
       - name: Upload Plan to S3
         run: aws s3 cp                                          \
           ${{ env.FILE_PLAN }}                                  \
           s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
+        working-directory: terraform
