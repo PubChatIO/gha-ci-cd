@@ -1,0 +1,67 @@
+name: PR - Merge
+
+on: workflow_dispatch
+
+env:
+  ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+
+jobs:
+  merge:
+    runs-on: ubuntu-24.04
+
+    environment:
+      name: ${{ github.ref_name }}
+
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ vars.TF_VERSION }}
+
+      - name: Initialize
+        run: |
+          terraform init                                    \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="bucket=${{ env.BUCKET_TF }}"   \
+            -backend-config="key=state/terraform.tfstate"   \
+            -var env="${{ github.ref_name }}"
+        working-directory: terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: terraform
+
+      - name: Log Into ECR
+        run: |
+          aws ecr get-login-password        \
+          --region ${{ vars.AWS_REGION }} | \
+            docker login                    \
+              --username AWS                \
+              --password-stdin ${{ env.ECR_URL }}
+
+      - name: Build Docker Image (API)
+        run: |
+          docker build                                \
+            -t pubchatio/api                          \
+            --build-arg API_PORT=${{ vars.API_PORT }} \
+            .
+
+      - name: Build Docker Image (UI)
+        run: |
+          docker build                                \
+            -t pubchatio/ui                           \
+            --build-arg API_PORT=${{ vars.UI_PORT }}  \
+            .
+
+      - name: Push Docker Image (API)
+        run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest
+
+      - name: Push Docker Image (UI)
+        run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest

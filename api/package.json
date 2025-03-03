@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "bun --watch run ./src/index.js",
     "start": "bun run ./src/index.js",
+    "build": "echo \"pretending to build...\"",
     "lint": "eslint ."
   },
   "dependencies": {

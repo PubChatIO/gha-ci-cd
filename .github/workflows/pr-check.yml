@@ -103,7 +103,7 @@ jobs:
           kill $(cat api.pid)
           kill $(cat ui.pid)
 
-      - name: Initialize
+      - name: Terraform Initialize
         run: |
           terraform init                                    \
             -backend-config="region=${{ vars.AWS_REGION }}" \
@@ -112,21 +112,14 @@ jobs:
             -var env="${{ github.ref_name }}"
         working-directory: terraform
 
-      - name: Format
+      - name: Terraform Format
         run: terraform fmt -check
         working-directory: terraform
 
-      - name: Validate
+      - name: Terraform Validate
         run: terraform validate
         working-directory: terraform
 
-      - name: Plan
-        run: terraform plan -out="${{ env.FILE_PLAN }}"
-        working-directory: terraform
-
-      - name: Upload Plan to S3
-        run: |
-          aws s3 cp                                               \
-            ./${{ env.FILE_PLAN }}                                \
-            s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
+      - name: Terraform Plan
+        run: terraform plan
         working-directory: terraform
