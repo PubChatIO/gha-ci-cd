@@ -2,6 +2,11 @@ name: PR - Check
 
 on:
   pull_request:
+  push:
+    branches:
+      - dev
+      - stg
+      - prod
 
 env:
   FILE_PLAN: ${{ github.event.number || 'test' }}.plan
@@ -19,6 +24,9 @@ jobs:
       name: ${{ github.base_ref }}
 
     steps:
+      - name: asdf
+        run: "echo \"test\""
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
