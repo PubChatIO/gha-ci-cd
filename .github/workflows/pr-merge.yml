@@ -1,6 +1,8 @@
 name: PR - Merge
 
-on: workflow_dispatch
+on:
+  pull_request:
+  push:
 
 env:
   ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
