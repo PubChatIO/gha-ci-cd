@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Debug Base Ref
-        run: "echo ${{ github.base_ref }}"
+        run: "echo asdf ${{ github.base_ref }} asdf"
 
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1.7.0
