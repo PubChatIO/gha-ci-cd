@@ -25,3 +25,17 @@ jobs:
 
       - name: Create Bucket
         run: aws s3 mb s3://${{ env.BUCKET_TF }}
+
+      - name: Create ECR Repo (API)
+        run: |
+          aws ecr create-repository                         \
+            --repository-name api                           \
+            --image-tag-mutability IMMUTABLE                \
+            --image-scanning-configuration scanOnPush=true
+
+      - name: Create ECR Repo (UI)
+        run: |
+          aws ecr create-repository                         \
+            --repository-name ui                            \
+            --image-tag-mutability IMMUTABLE                \
+            --image-scanning-configuration scanOnPush=true

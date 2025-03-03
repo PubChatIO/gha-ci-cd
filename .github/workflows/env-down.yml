@@ -46,8 +46,17 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
 
-      - name: Empty Bucket
-        run: aws s3 rm s3://${{ env.BUCKET_TF }} --recursive
+      - name: Delete Terraform State Bucket
+        run: aws s3 rb s3://${{ env.BUCKET_TF }} --force
 
-      - name: 'Delete Bucket'
-        run: 'aws s3 rb s3://${{ env.BUCKET_TF }}'
+      - name: Delete the ECR Repo (API)
+        run: |
+          aws ecr delete-repository \
+            --repository-name api   \
+            --force
+
+      - name: Delete the ECR Repo (UI)
+        run: |
+          aws ecr delete-repository \
+            --repository-name ui   \
+            --force
