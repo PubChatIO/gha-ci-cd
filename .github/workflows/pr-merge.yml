@@ -75,5 +75,5 @@ jobs:
         working-directory: api
 
       - name: Push Docker Image (UI)
-        run: docker push ${{ env.ECR_URL }}/api:latest
+        run: docker push ${{ env.ECR_URL }}/ui:latest
         working-directory: ui
