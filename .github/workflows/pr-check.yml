@@ -103,7 +103,7 @@ jobs:
           kill $(cat api.pid)
           kill $(cat ui.pid)
 
-      - name: Terraform Initialize
+      - name: Initialize Terraform
         run: |
           terraform init                                    \
             -backend-config="region=${{ vars.AWS_REGION }}" \
@@ -112,14 +112,14 @@ jobs:
             -var env="${{ github.ref_name }}"
         working-directory: terraform
 
-      - name: Terraform Format
+      - name: Format Terraform
         run: terraform fmt -check
         working-directory: terraform
 
-      - name: Terraform Validate
+      - name: Validate Terraform
         run: terraform validate
         working-directory: terraform
 
-      - name: Terraform Plan
+      - name: Plan Terraform
         run: terraform plan
         working-directory: terraform

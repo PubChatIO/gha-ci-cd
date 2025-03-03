@@ -32,7 +32,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Initialize
+      - name: Initialize Terraform
         run: |
           terraform init                                    \
             -backend-config="region=${{ vars.AWS_REGION }}" \
@@ -41,7 +41,7 @@ jobs:
             -var env="${{ github.ref_name }}"
         working-directory: terraform
 
-      - name: Terraform Apply
+      - name: Apply Terraform
         run: terraform apply -auto-approve
         working-directory: terraform
 
