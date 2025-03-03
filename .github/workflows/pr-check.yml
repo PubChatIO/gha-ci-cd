@@ -2,15 +2,6 @@ name: PR - Check
 
 on:
   pull_request:
-  push:
-    branches:
-      - dev
-      - stg
-      - prod
-
-env:
-  FILE_PLAN: ${{ github.event.number || 'test' }}.plan
-  BUCKET_TF: pcio-${{ github.base_ref }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
 permissions:
   id-token: write
@@ -22,6 +13,10 @@ jobs:
 
     environment:
       name: ${{ github.base_ref }}
+
+    env:
+      FILE_PLAN: ${{ github.event.number || 'test' }}.plan
+      BUCKET_TF: pcio-${{ github.base_ref }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
     steps:
       - name: Configure AWS Credentials
@@ -129,11 +124,3 @@ jobs:
       - name: Plan Terraform
         run: terraform plan
         working-directory: terraform
-
-  deploy:
-    needs: checks
-    uses: ./.github/workflows/pr-merge.yml
-    if: >
-        github.ref_name == 'dev' ||
-        github.ref_name == 'stg' ||
-        github.ref_name == 'prod'
