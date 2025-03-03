@@ -125,7 +125,8 @@ jobs:
         working-directory: terraform
 
       - name: Upload Plan to S3
-        run: aws s3 cp                                          \
-          ${{ env.FILE_PLAN }}                                  \
-          s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
+        run: |
+          aws s3 cp                                               \
+            ./${{ env.FILE_PLAN }}                                \
+            s3://${{ env.BUCKET_TF }}/plans/${{ env.FILE_PLAN }}
         working-directory: terraform
