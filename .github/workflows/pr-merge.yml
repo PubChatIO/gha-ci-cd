@@ -6,7 +6,7 @@ on:
 
 env:
   ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-  BUCKET_TF: pcio-${{ github.ref_name }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
+  BUCKET_TF: pcio-${{ github.base_ref }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
 permissions:
   id-token: write
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     environment:
-      name: ${{ github.ref_name }}
+      name: ${{ github.base_ref }}
 
     steps:
       - name: Configure AWS Credentials
@@ -73,7 +73,7 @@ jobs:
             -backend-config="region=${{ vars.AWS_REGION }}" \
             -backend-config="bucket=${{ env.BUCKET_TF }}"   \
             -backend-config="key=state/terraform.tfstate"   \
-            -var env="${{ github.ref_name }}"
+            -var env="${{ github.base_ref }}"
         working-directory: terraform
 
       - name: Apply Terraform
