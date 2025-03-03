@@ -60,6 +60,7 @@ jobs:
             -t pubchatio/api                          \
             --build-arg API_PORT=${{ vars.API_PORT }} \
             .
+        working-directory: api
 
       - name: Build Docker Image (UI)
         run: |
@@ -67,9 +68,12 @@ jobs:
             -t pubchatio/ui                           \
             --build-arg API_PORT=${{ vars.UI_PORT }}  \
             .
+        working-directory: ui
 
       - name: Push Docker Image (API)
         run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest
+        working-directory: api
 
       - name: Push Docker Image (UI)
         run: docker push ${{ env.ECR_URL }}/pubchatio/api:latest
+        working-directory: ui
