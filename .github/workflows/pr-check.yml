@@ -24,9 +24,6 @@ jobs:
       name: ${{ github.base_ref }}
 
     steps:
-      - name: asdf
-        run: "echo \"test\""
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
@@ -132,3 +129,11 @@ jobs:
       - name: Plan Terraform
         run: terraform plan
         working-directory: terraform
+
+  deploy:
+    needs: checks
+    uses: ./.github/workflows/pr-merge.yml
+    if: >
+        github.ref_name == 'dev' ||
+        github.ref_name == 'stg' ||
+        github.ref_name == 'prod'
