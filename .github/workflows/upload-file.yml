@@ -29,6 +29,6 @@ jobs:
 
         - name: Upload File
           run: |
-            aws s3 cp \
-              ./test.txt
+            aws s3 cp                                   \
+              ./test.txt                                \
               s3://${{ env.BUCKET_TF }}/plans/test.txt
