@@ -36,17 +36,17 @@ jobs:
 
       - name: Build Docker Image (API)
         run: |
-          docker build                                \
-            -t ${{ env.ECR_URL }}/api                 \
-            --build-arg API_PORT=${{ secrets.API_PORT }} \
+          docker build                                    \
+            -t ${{ env.ECR_URL }}/api                     \
+            --build-arg API_PORT=${{ secrets.API_PORT }}  \
             .
         working-directory: api
 
       - name: Build Docker Image (UI)
         run: |
-          docker build                                \
-            -t ${{ env.ECR_URL }}/ui                  \
-            --build-arg API_PORT=${{ secrets.UI_PORT }}  \
+          docker build                                  \
+            -t ${{ env.ECR_URL }}/ui                    \
+            --build-arg API_PORT=${{ secrets.UI_PORT }} \
             .
         working-directory: ui
 
