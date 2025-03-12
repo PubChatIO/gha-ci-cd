@@ -46,7 +46,7 @@ jobs:
         run: |
           docker build                                  \
             -t ${{ env.ECR_URL }}/ui                    \
-            --build-arg API_PORT=${{ secrets.UI_PORT }} \
+            --build-arg UI_PORT=${{ secrets.UI_PORT }} \
             .
         working-directory: ui
 
