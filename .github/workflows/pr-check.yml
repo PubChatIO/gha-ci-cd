@@ -4,7 +4,6 @@ on:
   pull_request:
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
@@ -36,18 +35,6 @@ jobs:
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('bun.lock') }}
-
-      - name: Cache Dependencies (API)
-        uses: actions/cache@v3
-        with:
-          path: api/node_modules
-          key: node-modules-${{ hashFiles('api/bun.lock') }}
-
-      - name: Cache Dependencies (UI)
-        uses: actions/cache@v3
-        with:
-          path: ui/node_modules
-          key: node-modules-${{ hashFiles('ui/bun.lock') }}
 
       - name: Lint (API)
         run: cd api && docker compose exec api bun run lint && cd ..
