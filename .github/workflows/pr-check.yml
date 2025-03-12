@@ -80,6 +80,7 @@ jobs:
           kill $(cat api.pid)
           kill $(cat ui.pid)
           docker compose down
+          docker volume prune --all
 
       - name: Initialize Terraform
         run: |
