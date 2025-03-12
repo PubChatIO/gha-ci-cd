@@ -1,0 +1,18 @@
+name: TEST - Cleanup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: self-hosted
+
+    environment:
+      name: ${{ github.base_ref }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Wait
+        run: sleep 30
