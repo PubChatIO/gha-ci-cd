@@ -24,17 +24,18 @@ jobs:
       - name: Install Global Dependencies
         run: bun install
 
-      - name: Start Docker Compose
-        run: |
-          echo "API_PORT=${{ secrets.API_PORT }}" >> .env
-          echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
-          docker compose up -d
-
       - name: Cache Dependencies (global)
         uses: actions/cache@v3
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('bun.lock') }}
+
+      - name: Start Docker Compose
+        id: docker-compose-up
+        run: |
+          echo "API_PORT=${{ secrets.API_PORT }}" >> .env
+          echo "UI_PORT=${{ secrets.UI_PORT }}" >> .env
+          docker compose up -d
 
       - name: Lint (API)
         run: docker compose exec api bun run lint
@@ -48,10 +49,13 @@ jobs:
       - name: Run Code Tests (UI)
         run: docker compose exec ui bun test
 
-      - name: Spin Up Services
-        run: |
-          nohup docker compose exec api bun dev & echo $! > api.pid
-          nohup docker compose exec ui bun dev & echo $! > ui.pid
+      - name: Start Service (API)
+        id: docker-service-api
+        run: nohup docker compose exec api bun dev & echo $! > api.pid
+
+      - name: Start Service (UI)
+        id: docker-service-ui
+        run: nohup docker compose exec ui bun dev & echo $! > ui.pid
 
       - name: Wait for Service (API)
         run: npx wait-on http-get://localhost:${{ secrets.API_PORT }}/api
@@ -62,13 +66,21 @@ jobs:
       - name: Run E2E Tests
         run: bun run e2e:ci
 
-      - name: Spin Down Services
+      - name: Kill Service (API)
+        run: kill $(cat api.pid)
+        if: steps.docker-service-api.outcome == 'success'
+
+      - name: Kill Service (UI)
+        run: kill $(cat ui.pid)
+        if: steps.docker-service-ui.outcome == 'success'
+
+      - name: Stop Docker Compose
         run: |
-          kill $(cat api.pid)
-          kill $(cat ui.pid)
           docker compose down
-          docker volume prune --all --force
           docker image prune --all --force
+          docker volume prune --all --force
+          docker container prune --all --force
+        if: steps.docker-compose-up.outcome == 'success'
 
       - name: Initialize Terraform
         run: |
