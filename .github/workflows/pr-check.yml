@@ -37,10 +37,10 @@ jobs:
           key: node-modules-${{ hashFiles('bun.lock') }}
 
       - name: Lint (API)
-        run: cd api && docker compose exec api bun run lint && cd ..
+        run: docker compose exec api bun run lint
 
       - name: Lint (UI)
-        run: cd ui && docker compose exec ui bun run lint && cd ..
+        run: docker compose exec ui bun run lint
 
       - name: Run Code Tests (API)
         run: docker compose exec api bun test
@@ -67,7 +67,8 @@ jobs:
           kill $(cat api.pid)
           kill $(cat ui.pid)
           docker compose down
-          docker volume prune --all
+          docker volume prune --all --force
+          docker image prune --all --force
 
       - name: Initialize Terraform
         run: |
