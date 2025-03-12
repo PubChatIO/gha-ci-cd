@@ -19,23 +19,6 @@ jobs:
       BUCKET_TF: pcio-${{ github.base_ref }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
-        with:
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ vars.TF_VERSION }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: ${{ vars.BUN_VERSION }}
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
