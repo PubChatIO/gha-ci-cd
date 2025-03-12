@@ -19,6 +19,9 @@ jobs:
       BUCKET_TF: pcio-${{ github.base_ref }}-${{ secrets.AWS_ACCOUNT_ID }}-terraform
 
     steps:
+      - name: Startup Command
+        run: echo "Starting..."
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
