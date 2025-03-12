@@ -4,6 +4,6 @@ git pull
 git checkout -
 
 git stash pop
-git add .
+git add ../
 git commit -m "Updated"
 git push
