@@ -17,24 +17,12 @@ permissions:
 
 jobs:
   merge:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
 
     environment:
       name: ${{ github.ref_name }}
 
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
-        with:
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ vars.TF_VERSION }}
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
