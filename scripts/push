@@ -1,8 +1,10 @@
+echo "Syncing..."
 git stash
 git checkout dev
 git pull
 git checkout -
 
+echo "Committing..."
 git stash pop
 git add ../
 git commit -m "Updated"
