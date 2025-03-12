@@ -36,13 +36,6 @@ jobs:
         with:
           bun-version: ${{ vars.BUN_VERSION }}
 
-      - name: Install Cypress Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install                                              \
-            libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 \
-            libasound2t64 libxtst6 xauth xvfb
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
