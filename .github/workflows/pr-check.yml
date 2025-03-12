@@ -79,7 +79,7 @@ jobs:
           docker compose down
           docker image prune --all --force
           docker volume prune --all --force
-          docker container prune --all --force
+          docker container prune --force
         if: steps.docker-compose-up.outcome == 'success'
 
       - name: Initialize Terraform
